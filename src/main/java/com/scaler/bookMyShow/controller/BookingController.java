@@ -8,7 +8,7 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class BookingController {
 
-    private BookingService bookingService;
+    private final BookingService bookingService;
 
     @Autowired
     public BookingController(BookingService bookingService){
