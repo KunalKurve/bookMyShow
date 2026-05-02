@@ -1,10 +1,11 @@
 package com.scaler.bookMyShow.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import com.scaler.bookMyShow.models.enums.ShowSeatStatus;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.Date;
 
 @Getter
 @Setter
@@ -19,4 +20,14 @@ public class ShowSeat extends BaseModel{
     @ManyToOne
     @JoinColumn(name = "seat_id")
     private Seat seat;
+
+    // important for locking and concurrency handling
+    @Enumerated(EnumType.STRING)
+    private ShowSeatStatus showSeatStatus;
+
+    private Date lockedAt;
+
+    @ManyToOne
+    @JoinColumn(name = "booking_id")
+    private Booking booking;
 }

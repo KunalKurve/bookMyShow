@@ -1,9 +1,7 @@
 package com.scaler.bookMyShow.models;
 
 import com.scaler.bookMyShow.models.enums.Feature;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,16 +14,18 @@ public class Screen extends BaseModel{
 
     private int screen_no;
 
-    @OneToMany
+    @ElementCollection
+    @Enumerated(EnumType.STRING)
     private List<Feature> features;
 
     @ManyToOne
+    @JoinColumn(name = "theatre_id")
     private Theatre theatre;
 
-    @OneToMany
+    @OneToMany(mappedBy = "screen")
     private List<Show> shows;
 
-    @OneToMany
+    @OneToMany(mappedBy = "screen")
     private List<Seat> seats;
 
 }

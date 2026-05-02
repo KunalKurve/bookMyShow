@@ -1,9 +1,9 @@
 package com.scaler.bookMyShow.models.enums;
 
 public enum Language {
-    ENG,
-    HIN,
-    MAR,
+    ENGLISH,
+    HINDI,
+    MARATHI,
     TELUGU,
     FRENCH
 }
