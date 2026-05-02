@@ -1,6 +1,6 @@
 package com.scaler.bookMyShow.controller;
 
-import com.scaler.bookMyShow.models.Booking;
+//import com.scaler.bookMyShow.models.Booking;
 import com.scaler.bookMyShow.service.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
