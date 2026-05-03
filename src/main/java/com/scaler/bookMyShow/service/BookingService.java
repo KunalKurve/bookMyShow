@@ -1,12 +1,99 @@
 package com.scaler.bookMyShow.service;
 
-import com.scaler.bookMyShow.dto.BookingRequestDto;
+import com.scaler.bookMyShow.exceptions.ShowDoesNotExistException;
+import com.scaler.bookMyShow.exceptions.UserNotFoundException;
 import com.scaler.bookMyShow.models.Booking;
+import com.scaler.bookMyShow.models.Show;
+import com.scaler.bookMyShow.models.ShowSeat;
+import com.scaler.bookMyShow.models.User;
+import com.scaler.bookMyShow.models.enums.BookingStatus;
+import com.scaler.bookMyShow.models.enums.ShowSeatStatus;
+import com.scaler.bookMyShow.repository.BookingRepository;
+import com.scaler.bookMyShow.repository.ShowRepository;
+import com.scaler.bookMyShow.repository.ShowSeatRepository;
+import com.scaler.bookMyShow.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+
+@Service
 public class BookingService {
-    public Booking bookTicket(BookingRequestDto requestDTO) {
 
+    private UserRepository userRepository;
+    private ShowRepository showRepository;
+    private ShowSeatRepository showSeatRepository;
+    private BookingRepository bookingRepository;
+
+    @Autowired
+    public BookingService(UserRepository userRepository,
+                          ShowRepository showRepository,
+                          ShowSeatRepository showSeatRepository,
+                          BookingRepository bookingRepository){
+        this.userRepository = userRepository;
+        this.showRepository = showRepository;
+        this.showSeatRepository = showSeatRepository;
+        this.bookingRepository = bookingRepository;
+    }
+
+    // import the correct annotation (from springframework.transaction.annotation)
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    public Booking bookTicket(int userId, int showId, List<Integer> showSeatIds) {
+
+        //whenever coding any api or service logic - first code the validation logic
+
+        //userId should exist
+        Optional<User> userOptional = userRepository.findById(userId);
+        if(userOptional.isEmpty()){
+            throw new UserNotFoundException("User not found");
+        }
+        User user = userOptional.get();
+
+        // showId should exist
+        Optional<Show> optionalShow = showRepository.findById(showId);
+        if(optionalShow.isEmpty()){
+            throw new ShowDoesNotExistException("Show does not Exist");
+        }
+        Show show = optionalShow.get();
+
+        //showseats should exist and be Available not blocked or booked
+        List<ShowSeat> showSeats = showSeatRepository.findAllById(showSeatIds);
+        for(ShowSeat showSeat : showSeats){
+            if(!showSeat.getShowSeatStatus().equals(ShowSeatStatus.AVAILABLE)){
+                throw new RuntimeException("All requested seats are not available");
+            }
+        }
+        // when all showseats are available then only mark them as blocked
+        List<ShowSeat> savedShowSeats = new ArrayList<>();
+        for(ShowSeat showSeat: showSeats){
+
+            //showseat status change from available to blocked
+            showSeat.setShowSeatStatus(ShowSeatStatus.BLOCKED);
+            showSeat.setLockedAt(new Date());
+
+            //save the showseats status in db
+            ShowSeat savedShowSeat = showSeatRepository.save(showSeat);
+            savedShowSeats.add(savedShowSeat);
+        }
+
+        //create Booking then save and return
         Booking booking = new Booking();
-        return booking;
+        booking.setUser(user);
+        booking.setShowSeats(savedShowSeats);
+        booking.setCreatedAt(new Date());
+        booking.setPayments(new ArrayList<>());
+//        double amount = pricingStrategy.calculateAmount(savedShowSeats, show);
+//        booking.setTotalAmount(amount);
+        booking.setTotalAmount(2000);
+        booking.setShow(show);
+        // set status to Pending because payment is Pending
+        booking.setBookingStatus(BookingStatus.PENDING);
+        booking.setTickets(new ArrayList<>());
+        return bookingRepository.save(booking);
     }
 }
