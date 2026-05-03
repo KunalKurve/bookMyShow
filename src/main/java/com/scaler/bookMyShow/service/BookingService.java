@@ -85,7 +85,7 @@ public class BookingService {
         Booking booking = new Booking();
         booking.setUser(user);
         booking.setShowSeats(savedShowSeats);
-        booking.setCreatedAt(new Date());
+//        booking.setBookingDate(new Date());
         booking.setPayments(new ArrayList<>());
 //        double amount = pricingStrategy.calculateAmount(savedShowSeats, show);
 //        booking.setTotalAmount(amount);

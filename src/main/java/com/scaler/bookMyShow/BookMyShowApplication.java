@@ -1,10 +1,21 @@
 package com.scaler.bookMyShow;
 
+import com.scaler.bookMyShow.controller.UserController;
+import com.scaler.bookMyShow.dto.SignupRequestDto;
+import com.scaler.bookMyShow.dto.SignupResponseDto;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @SpringBootApplication
-public class BookMyShowApplication {
+@EnableJpaAuditing
+public class BookMyShowApplication implements CommandLineRunner {
+
+	@Autowired
+	UserController userController;
 
 	public static void main(String[] args) {
 		SpringApplication.run(BookMyShowApplication.class, args);
@@ -26,4 +37,16 @@ public class BookMyShowApplication {
 		// show via the app by paying for them at the time of booking.
 	}
 
+	@Override
+	public void run(String... args) throws Exception {
+		SignupRequestDto requestDto = new SignupRequestDto();
+		requestDto.setName("Virat Kohli");
+		requestDto.setEmail("viratkohli18@zoho.in");
+		requestDto.setPhone("1234567890");
+		requestDto.setPassword("virushkaRocks");
+
+		SignupResponseDto responseDto = userController.signUp(requestDto);
+		System.out.println(responseDto.getUserId());
+		System.out.println(responseDto.getResponseStatus());
+	}
 }
