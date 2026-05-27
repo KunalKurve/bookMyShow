@@ -1,4 +1,4 @@
-package com.scaler.bookMyShow.dto;
+package com.scaler.bookMyShow.dto.requests;
 
 import com.scaler.bookMyShow.models.City;
 import lombok.Getter;

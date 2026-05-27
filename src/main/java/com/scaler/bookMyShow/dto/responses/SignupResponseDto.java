@@ -1,4 +1,4 @@
-package com.scaler.bookMyShow.dto;
+package com.scaler.bookMyShow.dto.responses;
 
 import lombok.Getter;
 import lombok.Setter;
