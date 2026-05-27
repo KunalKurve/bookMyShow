@@ -1,9 +1,9 @@
 package com.scaler.bookMyShow.controller;
 
 //import com.scaler.bookMyShow.models.Booking;
-import com.scaler.bookMyShow.dto.BookingRequestDto;
-import com.scaler.bookMyShow.dto.BookingResponseDto;
-import com.scaler.bookMyShow.dto.ResponseStatus;
+import com.scaler.bookMyShow.dto.requests.BookingRequestDto;
+import com.scaler.bookMyShow.dto.responses.BookingResponseDto;
+import com.scaler.bookMyShow.dto.responses.ResponseStatus;
 import com.scaler.bookMyShow.models.Booking;
 import com.scaler.bookMyShow.service.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
