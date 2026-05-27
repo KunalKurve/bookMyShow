@@ -1,8 +1,10 @@
 package com.scaler.bookMyShow.controller;
 
-import com.scaler.bookMyShow.dto.ResponseStatus;
-import com.scaler.bookMyShow.dto.SignupRequestDto;
-import com.scaler.bookMyShow.dto.SignupResponseDto;
+import com.scaler.bookMyShow.dto.requests.LoginRequestDto;
+import com.scaler.bookMyShow.dto.responses.LoginResponseDto;
+import com.scaler.bookMyShow.dto.responses.ResponseStatus;
+import com.scaler.bookMyShow.dto.requests.SignupRequestDto;
+import com.scaler.bookMyShow.dto.responses.SignupResponseDto;
 import com.scaler.bookMyShow.models.User;
 import com.scaler.bookMyShow.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,21 @@ public class UserController {
                 responseDto.setResponseStatus(ResponseStatus.SUCCESS);
         } catch (Exception e) {
                 responseDto.setResponseStatus(ResponseStatus.FAILED);
+        }
+        return responseDto;
+    }
+
+    public LoginResponseDto login(LoginRequestDto requestDto){
+        LoginResponseDto responseDto = new LoginResponseDto();
+        try {
+            boolean isLoggedIn = userService.login(
+                    requestDto.getEmail(),
+                    requestDto.getPassword()
+            );
+            responseDto.setLoggedIn(isLoggedIn);
+            responseDto.setResponseStatus(ResponseStatus.SUCCESS);
+        } catch (Exception e) {
+            responseDto.setResponseStatus(ResponseStatus.FAILED);
         }
         return responseDto;
     }
