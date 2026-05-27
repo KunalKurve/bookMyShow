@@ -1,8 +1,8 @@
 package com.scaler.bookMyShow;
 
 import com.scaler.bookMyShow.controller.UserController;
-import com.scaler.bookMyShow.dto.SignupRequestDto;
-import com.scaler.bookMyShow.dto.SignupResponseDto;
+import com.scaler.bookMyShow.dto.requests.SignupRequestDto;
+import com.scaler.bookMyShow.dto.responses.SignupResponseDto;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
