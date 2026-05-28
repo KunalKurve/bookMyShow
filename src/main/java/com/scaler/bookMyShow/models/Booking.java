@@ -35,5 +35,4 @@ public class Booking extends BaseModel{
     @OneToMany(mappedBy = "booking")
     private List<Payment> payments;
 
-    //private Date bookingDate;
 }
