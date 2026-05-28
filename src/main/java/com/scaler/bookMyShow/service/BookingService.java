@@ -12,6 +12,7 @@ import com.scaler.bookMyShow.repository.BookingRepository;
 import com.scaler.bookMyShow.repository.ShowRepository;
 import com.scaler.bookMyShow.repository.ShowSeatRepository;
 import com.scaler.bookMyShow.repository.UserRepository;
+import com.scaler.bookMyShow.strategies.PricingStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -29,20 +30,25 @@ public class BookingService {
     private ShowRepository showRepository;
     private ShowSeatRepository showSeatRepository;
     private BookingRepository bookingRepository;
+    private PricingService pricingService;
+    private PaymentService paymentService;
 
     @Autowired
     public BookingService(UserRepository userRepository,
                           ShowRepository showRepository,
                           ShowSeatRepository showSeatRepository,
-                          BookingRepository bookingRepository){
+                          BookingRepository bookingRepository,
+                          PricingService pricingService,
+                          PaymentService paymentService
+    ){
         this.userRepository = userRepository;
         this.showRepository = showRepository;
         this.showSeatRepository = showSeatRepository;
         this.bookingRepository = bookingRepository;
+        this.pricingService = pricingService;
+        this.paymentService = paymentService;
     }
 
-    // import the correct annotation (from springframework.transaction.annotation)
-    @Transactional(isolation = Isolation.SERIALIZABLE)
     public Booking bookTicket(int userId, int showId, List<Integer> showSeatIds) {
 
         //whenever coding any api or service logic - first code the validation logic
@@ -81,15 +87,19 @@ public class BookingService {
             savedShowSeats.add(savedShowSeat);
         }
 
+        return createBooking(user, show, savedShowSeats);
+    }
+
+    // import the correct annotation (from springframework.transaction.annotation)
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    public Booking createBooking(User user, Show show, List<ShowSeat> savedShowSeats){
         //create Booking then save and return
         Booking booking = new Booking();
         booking.setUser(user);
         booking.setShowSeats(savedShowSeats);
-//        booking.setBookingDate(new Date());
         booking.setPayments(new ArrayList<>());
-//        double amount = pricingStrategy.calculateAmount(savedShowSeats, show);
-//        booking.setTotalAmount(amount);
-        booking.setTotalAmount(2000);
+        double amount = pricingService.calculateBookingAmount(savedShowSeats, show);
+        booking.setTotalAmount(amount);
         booking.setShow(show);
         // set status to Pending because payment is Pending
         booking.setBookingStatus(BookingStatus.PENDING);
