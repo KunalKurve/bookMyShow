@@ -28,6 +28,9 @@ public class Show extends BaseModel{
     private Screen screen;
 
     @OneToMany(mappedBy = "show")
+    private List<ShowSeat> showSeats;
+
+    @OneToMany(mappedBy = "show")
     private List<ShowSeatType> showSeatTypes;
 
 }
