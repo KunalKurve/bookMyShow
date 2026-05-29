@@ -10,11 +10,9 @@ public class SignupRequestDto {
 
     private String name;
 
-    private String email;
-
     private String password;
 
-    private String phone;
+    private String email;
 
     private City city;
 }
