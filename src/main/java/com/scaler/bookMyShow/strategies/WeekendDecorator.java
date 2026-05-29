@@ -2,11 +2,12 @@ package com.scaler.bookMyShow.strategies;
 
 import com.scaler.bookMyShow.models.Show;
 import com.scaler.bookMyShow.models.ShowSeat;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component
 public class WeekendDecorator extends PricingDecorator{
-
 
     public WeekendDecorator(PricingStrategy pricingStrategy){
         super(pricingStrategy);
