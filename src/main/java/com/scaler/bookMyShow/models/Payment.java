@@ -17,6 +17,7 @@ public class Payment extends BaseModel{
     private Booking booking;
 
     private String transaction_id;
+
     private double totalAmount;
 
     @Enumerated(value = EnumType.STRING)
