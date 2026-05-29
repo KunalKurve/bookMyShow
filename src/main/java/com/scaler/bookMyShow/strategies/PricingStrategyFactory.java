@@ -30,7 +30,7 @@ public class PricingStrategyFactory {
 
     public boolean isWeekend(Show show){
 
-        DayOfWeek day = DayOfWeek.of(show.getStart_time().getDay());
+        DayOfWeek day = DayOfWeek.of(show.getStartTime().getDay());
 
         return day == DayOfWeek.SATURDAY || day == DayOfWeek.SUNDAY;
 

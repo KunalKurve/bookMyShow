@@ -22,7 +22,6 @@ public class PricingService {
     public double calculateBookingAmount(List<ShowSeat> showSeats, Show show){
 
         PricingStrategy pricingStrategy = pricingStrategyFactory.getPricingStrategy(show);
-
         return pricingStrategy.calculateAmount(showSeats, show);
     }
 }
