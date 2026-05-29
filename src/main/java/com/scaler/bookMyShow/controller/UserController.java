@@ -26,7 +26,6 @@ public class UserController {
                 User user = userService.registerUser(
                         requestDto.getName(),
                         requestDto.getEmail(),
-                        requestDto.getPhone(),
                         requestDto.getPassword()
                 );
                 responseDto.setUserId(user.getId());
