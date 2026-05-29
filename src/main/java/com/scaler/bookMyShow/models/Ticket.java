@@ -15,6 +15,11 @@ public class Ticket extends BaseModel{
     @JoinColumn(name = "booking_id")
     private Booking booking;
 
+
+    @ManyToOne
+    @JoinColumn(name = "show_id")
+    private Show show;
+
     @ManyToOne
     @JoinColumn(name = "show_seat_id")
     private ShowSeat showSeat;
