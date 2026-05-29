@@ -10,7 +10,7 @@ import lombok.Setter;
 @Entity(name = "seats")
 public class Seat extends BaseModel{
 
-    private int seat_no;
+    private int seatNumber;
 
     //deliberate bug
     private int row_no;
