@@ -22,7 +22,7 @@ public class UserService {
         this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
-    public User registerUser(String name, String email, String phone, String password) {
+    public User registerUser(String name, String email, String password) {
 
         Optional<User> optionalUser = userRepository.findByEmail(email);
         if(optionalUser.isPresent()){
@@ -31,7 +31,6 @@ public class UserService {
 
         User user = new User();
         user.setName(name);
-        user.setPhone(phone);
         user.setEmail(email);
         String encodedPassword = passwordEncoder.encode(password);
         user.setPassword(encodedPassword);
