@@ -1,8 +1,7 @@
 package com.scaler.bookMyShow.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import com.scaler.bookMyShow.models.enums.UserType;
+import jakarta.persistence.*;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -15,8 +14,10 @@ public class User extends BaseModel{
 
     private String name;
     private String email;
-    private String phone;
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    private UserType userType;
 
     @ManyToOne
     @JoinColumn(name = "city_id")
