@@ -23,13 +23,17 @@ public class BasePricingStrategy implements PricingStrategy{
     @Override
     public double calculateAmount(List<ShowSeat> savedShowSeats, Show show) {
 
+        System.out.println("Calculating amount...");
         double total = 0;
         for(ShowSeat showSeat : savedShowSeats){
+
+            System.out.println(showSeat.getSeat().getSeatType());
 
             ShowSeatType showSeatType = showSeatTypeRepository
                     .findByShowAndSeatType(show, showSeat.getSeat().getSeatType())
                     .orElseThrow(()-> new RuntimeException("No such seatType in Show"));
 
+            System.out.println(showSeatType.getPrice());
             total += showSeatType.getPrice();
         }
 
