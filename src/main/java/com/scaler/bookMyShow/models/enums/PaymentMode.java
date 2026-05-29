@@ -2,8 +2,9 @@ package com.scaler.bookMyShow.models.enums;
 
 public enum PaymentMode {
 
-    CC,
-    DC,
+    CARD,
     UPI,
-    WALLET
+    WALLET,
+    CASH,
+    NETBANKING
 }
