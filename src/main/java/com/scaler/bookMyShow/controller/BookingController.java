@@ -19,7 +19,7 @@ public class BookingController {
         this.bookingService = bookingService;
     }
 
-    public BookingResponseDto makeBooking(BookingRequestDto requestDto){
+    public BookingResponseDto bookTicket(BookingRequestDto requestDto){
         BookingResponseDto responseDto = new BookingResponseDto();
         try{
             Booking booking = bookingService.bookTicket(
