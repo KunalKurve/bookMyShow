@@ -7,7 +7,5 @@ import java.util.List;
 
 public interface PricingStrategy {
 
-
-
     double calculateAmount(List<ShowSeat> savedShowSeats, Show show);
 }
