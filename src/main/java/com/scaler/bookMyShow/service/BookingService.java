@@ -12,7 +12,6 @@ import com.scaler.bookMyShow.repository.BookingRepository;
 import com.scaler.bookMyShow.repository.ShowRepository;
 import com.scaler.bookMyShow.repository.ShowSeatRepository;
 import com.scaler.bookMyShow.repository.UserRepository;
-import com.scaler.bookMyShow.strategies.PricingStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -31,27 +30,26 @@ public class BookingService {
     private ShowSeatRepository showSeatRepository;
     private BookingRepository bookingRepository;
     private PricingService pricingService;
-    private PaymentService paymentService;
 
     @Autowired
     public BookingService(UserRepository userRepository,
                           ShowRepository showRepository,
                           ShowSeatRepository showSeatRepository,
                           BookingRepository bookingRepository,
-                          PricingService pricingService,
-                          PaymentService paymentService
+                          PricingService pricingService
     ){
         this.userRepository = userRepository;
         this.showRepository = showRepository;
         this.showSeatRepository = showSeatRepository;
         this.bookingRepository = bookingRepository;
         this.pricingService = pricingService;
-        this.paymentService = paymentService;
     }
 
+    // import the correct annotation (from springframework.transaction.annotation)
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public Booking bookTicket(int userId, int showId, List<Integer> showSeatIds) {
 
-        //whenever coding any api or service logic - first code the validation logic
+        //First : whenever coding any api or service logic - code the validation logic
 
         //userId should exist
         Optional<User> userOptional = userRepository.findById(userId);
@@ -69,6 +67,15 @@ public class BookingService {
 
         //showseats should exist and be Available not blocked or booked
         List<ShowSeat> showSeats = showSeatRepository.findAllById(showSeatIds);
+
+        if(showSeatIds.size() > 10){
+            throw new RuntimeException("Cannot book more than 10 tickets in one go");
+        }
+
+        if(showSeats.size() != showSeatIds.size()) {
+            throw new RuntimeException("Some seats not found");
+        }
+
         for(ShowSeat showSeat : showSeats){
             if(!showSeat.getShowSeatStatus().equals(ShowSeatStatus.AVAILABLE)){
                 throw new RuntimeException("All requested seats are not available");
@@ -80,19 +87,14 @@ public class BookingService {
 
             //showseat status change from available to blocked
             showSeat.setShowSeatStatus(ShowSeatStatus.BLOCKED);
+            System.out.println("Seats blocked successfully");
             showSeat.setLockedAt(new Date());
 
             //save the showseats status in db
-            ShowSeat savedShowSeat = showSeatRepository.save(showSeat);
-            savedShowSeats.add(savedShowSeat);
+            savedShowSeats.add(showSeat);
         }
+        showSeatRepository.saveAll(savedShowSeats);
 
-        return createBooking(user, show, savedShowSeats);
-    }
-
-    // import the correct annotation (from springframework.transaction.annotation)
-    @Transactional(isolation = Isolation.SERIALIZABLE)
-    public Booking createBooking(User user, Show show, List<ShowSeat> savedShowSeats){
         //create Booking then save and return
         Booking booking = new Booking();
         booking.setUser(user);
@@ -104,6 +106,12 @@ public class BookingService {
         // set status to Pending because payment is Pending
         booking.setBookingStatus(BookingStatus.PENDING);
         booking.setTickets(new ArrayList<>());
-        return bookingRepository.save(booking);
+        booking.setExpiresAt(new Date(System.currentTimeMillis() + 15 * 60 * 1000));
+
+        System.out.println("Booking amount = " + amount);
+        Booking savedBooking = bookingRepository.save(booking);
+        System.out.println("Booking saved with ID = " + savedBooking.getId());
+
+        return savedBooking;
     }
 }
